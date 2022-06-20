@@ -104,6 +104,7 @@ Shopify.Product.prototype.optionValues = function(index) {
 
 // return the variant object if exists with given values, otherwise return null
 Shopify.Product.prototype.getVariant = function(selectedValues) {
+
   var found = null;
   if (selectedValues.length != this.options.length) { return found; }
 
@@ -385,7 +386,6 @@ Shopify.OptionSelectors.prototype.buildSelectors = function() {
 
     div.setAttribute('class', radioDivClass);
     div.appendChild(selector.element);
-
     return div;
   });
 
@@ -408,12 +408,16 @@ Shopify.OptionSelectors.prototype.selectedValues = function() {
       for (var j = 0; j < currentSelector.element.childNodes.length; j++) {
         if (currentSelector.element.childNodes[j].checked === true || currentSelector.element.childNodes[j].status === true) {
           thisValue = currentSelector.element.childNodes[j].value;
+          currentSelector.element.childNodes[j].labels[0].style.backgroundColor = '#c8493f';
+        } else if (currentSelector.element.childNodes[j].checked === false || currentSelector.element.childNodes[j].status === false) {
+			currentSelector.element.childNodes[j].labels[0].style.backgroundColor = 'transparent';
         }
       }
     }
 
     currValues.push(thisValue);
   }
+
   return currValues;
 };
 
@@ -542,9 +546,13 @@ Shopify.SingleOptionRadio = function(multiSelector, index, name, values) {
   this.element.id = multiSelector.domIdPrefix + '-option-' + index;
   this.element.onchange = function(event, options) {
     options = options || {};
+    
 
     multiSelector.updateSelectors(index, options);
   };
+  
+  
+
 
   return true;
 };
